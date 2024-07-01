@@ -25,7 +25,10 @@ typedef struct s_philo
 }				t_philo;
 //[FOLDER] src
 //[FILE] philo_handler.c
-void	start_philosopher(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list);
-t_philo	*init_philos_tab(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list);
+void		start_philosopher(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list);
+
+//[FILE] philo_init.c
+t_philo		*init_philos_tab(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list);
+t_params	init_params(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list);
 
 #endif
