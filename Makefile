@@ -2,7 +2,7 @@ NAME = philosopher
 
 CC = cc
 
-CFLAGS = # -Wall -Wextra -Werror
+CFLAGS = -fsanitize=thread
 
 LIB = -pthread
 
@@ -10,6 +10,7 @@ INC = headers/philosopher.h
 
 SRCS = 	main.c\
 		src/philo_handler.c\
+		src/philo_init.c\
 
 OBJS =	$(SRCS:.c=.o)
 
