@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 23:21:52 by root              #+#    #+#             */
-/*   Updated: 2024/07/08 21:08:48 by root             ###   ########.fr       */
+/*   Updated: 2024/07/09 02:35:45 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,6 @@ void	*routine_function(void *arg)
 			break;
 		usleep(philo->params.tts);
 	}
-	pthread_mutex_unlock(philo->rigth_fork_mutex);
-	pthread_mutex_unlock(philo->left_fork_mutex);
 }
 
 void	start_philosopher(int nb_philo, int ttd, int tte, int tts, int *philo_eat_list)
@@ -128,7 +126,6 @@ void	start_philosopher(int nb_philo, int ttd, int tte, int tts, int *philo_eat_l
 	int *ready;
 	t_philo		*philos_tab;
 	
-	//create philos_nb + 1 thread to monitor death
 	philos_tab = init_philos_tab(nb_philo, ttd, tte, tts, philo_eat_list);
 	init_philos_fork(philos_tab, nb_philo);
 	index = 0;
