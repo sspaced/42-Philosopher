@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 23:21:52 by root              #+#    #+#             */
-/*   Updated: 2024/07/09 02:35:45 by root             ###   ########.fr       */
+/*   Updated: 2024/07/12 16:50:17 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,20 @@ int await_ready(t_philo *philo)
 	return (pthread_mutex_unlock(philo->ready_mutex), 0);
 }
 
+time_t elapsed_meal_time(t_philo *philo, time_t sleep)
+{
+	time_t time;
+
+	time = current_time_ms();
+	return (time + sleep - philo->last_meal_time - philo->start_time);
+	
+}
 int check_dead(t_philo *philo, time_t sleep)
 {
-	struct timeval tv;
-	
-	gettimeofday(&tv, NULL);
 	pthread_mutex_lock(philo->dead_mutex);
 	if (*(philo->dead) == 1)
 		return (pthread_mutex_unlock(philo->dead_mutex), 1);
-	//printf("time between 2 meal : %ld\n", ((((tv.tv_sec*1000) + (tv.tv_usec / 1000) + sleep) - (philo->last_meal_time + philo->start_time))));
-	if (((((tv.tv_sec*1000) + (tv.tv_usec / 1000) + sleep) - (philo->last_meal_time + philo->start_time))) > philo->params.ttd)
+	if (elapsed_meal_time(philo, sleep) > philo->params.ttd)
 	{
 		*(philo->dead) = 1;
 		dying(philo);
@@ -38,53 +42,51 @@ int check_dead(t_philo *philo, time_t sleep)
 	return (pthread_mutex_unlock(philo->dead_mutex), 0); 
 }
 
+int display_info(t_philo *philo, char *info, int eat, int sleep)
+{
+	time_t	current_time;
+	time_t	elapsed_time;
+
+	current_time = current_time_ms();
+	elapsed_time = current_time - philo->start_time;
+	if (check_dead(philo, sleep))
+		return (1);
+	pthread_mutex_lock(philo->dead_mutex);
+	if (*(philo->dead) != 1)
+		printf("%ld %d %s\n", elapsed_time, philo->philo_id, info);
+	pthread_mutex_unlock(philo->dead_mutex);
+	if (eat == 1)
+		philo->last_meal_time = current_time;
+	return (0);
+}
+
 void dying(t_philo *philo)
 {
-	struct timeval tv;
-
-	gettimeofday(&tv, NULL);
-	printf("%ld %d died\n", (((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time), philo->philo_id);
+	time_t	current_time;
+	time_t	elapsed_time;
+	
+	current_time = current_time_ms();
+	elapsed_time = current_time - philo->start_time;
+	printf("%ld %d died\n", elapsed_time, philo->philo_id);
 }
 
-int	thinking(t_philo *philo)
+time_t	current_time_ms()
 {
 	struct timeval tv;
-	
-	if (check_dead(philo, 0))
-		return (1);
-	gettimeofday(&tv, NULL);
-	printf("%ld %d is thinking\n", (((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time), philo->philo_id);
-}
+	time_t	time;
 
-int	forking(t_philo *philo)
-{
-	struct timeval tv;
-	
-	if (check_dead(philo, 0))
-		return (1);
 	gettimeofday(&tv, NULL);
-	printf("%ld %d has taken a fork\n", ((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time, philo->philo_id);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	return (time);
 }
-
-int eating(t_philo *philo)
+void custom_usleep(int time_sleep)
 {
-	struct timeval tv;
-	
-	if (check_dead(philo, philo->params.tte))
-		return (1);
-	gettimeofday(&tv, NULL);
-	printf("%ld %d is eating\n", ((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time, philo->philo_id);
-	philo->last_meal_time = ((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time + philo->params.tte;
-}
+    time_t start = current_time_ms();
 
-int sleeping(t_philo *philo)
-{
-	struct timeval tv;
-	
-	if (check_dead(philo, philo->params.tts))
-		return (1);
-	gettimeofday(&tv, NULL);
-	printf("%ld %d is sleeping\n", ((tv.tv_sec*1000) + (tv.tv_usec / 1000)) - philo->start_time, philo->philo_id);
+    while (current_time_ms() - start < time_sleep / 1000)
+    {
+        usleep(1);
+    } 
 }
 
 void	*routine_function(void *arg)
@@ -101,22 +103,22 @@ void	*routine_function(void *arg)
 	philo->start_time = ((tv.tv_sec*1000) + (tv.tv_usec / 1000));
 	while (1)
 	{
-		if (thinking(philo))
+		if (display_info(philo, "is thinking", 0, 0))
 			break;
 		pthread_mutex_lock(philo->rigth_fork_mutex);
-		if(forking(philo))
+		if(display_info(philo, "has taken a fork", 0, 0))
 			break;
 		pthread_mutex_lock(philo->left_fork_mutex);
-		if (forking(philo))
+		if (display_info(philo, "has taken a fork", 0, 0))
 			break;
-		if (eating(philo))
+		if (display_info(philo, "is eating", 1, philo->params.tte))
 			break;
-		usleep(philo->params.tte);
+		custom_usleep(philo->params.tte);
 		pthread_mutex_unlock(philo->rigth_fork_mutex);
 		pthread_mutex_unlock(philo->left_fork_mutex);
-		if (sleeping(philo))
+		if (display_info(philo, "is sleeping", 0, philo->params.tts))
 			break;
-		usleep(philo->params.tts);
+		custom_usleep(philo->params.tts);
 	}
 }
 
@@ -144,11 +146,4 @@ void	start_philosopher(int nb_philo, int ttd, int tte, int tts, int *philo_eat_l
 		pthread_join(philos_tab[index].thread, NULL);
 		index++;
 	}
-}
-
-void display(int philo_id, int status)
-{
-	//lock
-	//printf("Philo ... , status ...");
-	//unlock
 }

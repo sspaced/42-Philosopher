@@ -46,5 +46,7 @@ int			eating(t_philo *philo);
 int			sleeping(t_philo *philo);
 void		dying(t_philo *philo);
 int			check_dead(t_philo *philo, time_t sleep);
+int			display_info(t_philo *philo, char *info, int eat, int sleep);
+time_t		current_time_ms();
 
 #endif
