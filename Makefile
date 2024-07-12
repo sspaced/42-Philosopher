@@ -11,6 +11,8 @@ INC = headers/philosopher.h
 SRCS = 	main.c\
 		src/philo_handler.c\
 		src/philo_init.c\
+		src/philo_utils.c\
+		src/philo_display.c\
 
 OBJS =	$(SRCS:.c=.o)
 
