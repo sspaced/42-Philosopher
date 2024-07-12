@@ -6,13 +6,13 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:16:30 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 18:23:32 by root             ###   ########.fr       */
+/*   Updated: 2024/07/12 18:48:53 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/philosopher.h"
 
-int	display_info(t_philo *philo, char *info, int eat, int sleep)
+int	display_info(t_philo *philo, char *info, int type, int sleep)
 {
 	time_t	current_time;
 	time_t	elapsed_time;
@@ -25,8 +25,13 @@ int	display_info(t_philo *philo, char *info, int eat, int sleep)
 	if (*(philo->dead) != 1)
 		printf("%ld %d %s\n", elapsed_time, philo->philo_id, info);
 	pthread_mutex_unlock(philo->dead_mutex);
-	if (eat == 1)
+	if (type == 1)
+	{
 		philo->last_meal_time = current_time;
+		custom_usleep(philo->params.tte);
+	}
+	else if (type == 2)
+		custom_usleep(philo->params.tts);
 	return (0);
 }
 
