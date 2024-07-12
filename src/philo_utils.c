@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:15:20 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 18:31:38 by root             ###   ########.fr       */
+/*   Updated: 2024/07/12 18:39:08 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,15 @@
 
 int	await_ready(t_philo *philo)
 {
+	struct timeval	tv;
+
 	pthread_mutex_lock(philo->ready_mutex);
+	gettimeofday(&tv, NULL);
 	if (*(philo->ready) == 1)
+	{
+		philo->start_time = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 		return (pthread_mutex_unlock(philo->ready_mutex), 1);
+	}
 	return (pthread_mutex_unlock(philo->ready_mutex), 0);
 }
 

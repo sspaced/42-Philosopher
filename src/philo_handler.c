@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 23:21:52 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 18:30:37 by root             ###   ########.fr       */
+/*   Updated: 2024/07/12 18:40:42 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,11 @@ int	check_dead(t_philo *philo, time_t sleep)
 void	*routine_function(void *arg)
 {
 	t_philo			*philo;
-	struct timeval	tv;
 
 	philo = (t_philo *)arg;
 	while (1)
 		if (await_ready(philo))
 			break ;
-	gettimeofday(&tv, NULL);
-	philo->start_time = ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 	while (1)
 	{
 		if (display_info(philo, "is thinking", 0, 0))
@@ -56,6 +53,7 @@ void	*routine_function(void *arg)
 			break ;
 		custom_usleep(philo->params.tts);
 	}
+	return (NULL);
 }
 
 void	start_philosopher(int nb_philo, t_params params)
