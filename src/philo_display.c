@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_display.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:16:30 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 18:48:53 by root             ###   ########.fr       */
+/*   Updated: 2024/09/25 17:53:54 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	display_info(t_philo *philo, char *info, int type, int sleep)
 	pthread_mutex_lock(philo->dead_mutex);
 	if (*(philo->dead) != 1)
 		printf("%ld %d %s\n", elapsed_time, philo->philo_id, info);
+	else 
+		return (pthread_mutex_unlock(philo->dead_mutex), 1);
 	pthread_mutex_unlock(philo->dead_mutex);
 	if (type == 1)
 	{
@@ -31,7 +33,7 @@ int	display_info(t_philo *philo, char *info, int type, int sleep)
 		custom_usleep(philo->params.tte);
 	}
 	else if (type == 2)
-		custom_usleep(philo->params.tts);
+		custom_usleep(philo->params.tts);	
 	return (0);
 }
 

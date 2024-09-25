@@ -3,28 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 19:12:26 by root             ###   ########.fr       */
+/*   Updated: 2024/09/25 17:52:13 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./headers/philosopher.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
 	int	nb_philo;
 	int	ttd;
 	int	tte;
 	int	tts;
 	int	*philo_eat_list;
-
-	nb_philo = 4;
-	ttd = 300000;
-	tte = 200000;
-	tts = 100000;
-	philo_eat_list = NULL;
-	start_philosopher(nb_philo, init_params(ttd, tte, tts, philo_eat_list));
+	
+	if (argc < 5)
+		return (printf("Invalid parameters !\n"));
+	else
+	{
+		nb_philo = atoi(argv[1]);
+		ttd = atoi(argv[2]);
+		tte = atoi(argv[3]);
+		tts = atoi(argv[4]);
+		philo_eat_list = NULL;
+		start_philosopher(nb_philo, init_params(ttd, tte, tts, philo_eat_list));	
+	}
 	return (0);
 }

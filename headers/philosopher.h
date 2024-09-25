@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:23:56 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 19:05:05 by root             ###   ########.fr       */
+/*   Updated: 2024/09/25 22:04:52 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct s_philo
 	time_t			start_time;
 	int				*dead;
 	int				*ready;
+	int				*right_fork;
+	int				*left_fork;
 	pthread_mutex_t	*rigth_fork_mutex;
 	pthread_mutex_t	*left_fork_mutex;
 	pthread_mutex_t	*ready_mutex;
@@ -51,9 +53,10 @@ void		*thread_routine(void *arg);
 //[FILE] philo_init.c
 t_philo		*init_philos_tab(int nb_philo, t_params	params);
 t_params	init_params(int ttd, int tte, int tts, int *philo_eat_list);
-void		init_philos_fork(t_philo *philos_tab, int nb_philo);
+void		init_philos_fork_mutex(t_philo *philos_tab, int nb_philo);
 void		init_philos_status_mutex(t_philo *philos_tab, int nb_philo);
 void		init_philos_status(t_philo *philos_tab, int nb_philo);
+void		init_philos_fork(t_philo *pt, int nb_philo);
 
 //[FILE] philo_utils.c
 int			await_ready(t_philo *philo);
@@ -64,4 +67,7 @@ void		custom_usleep(int time_sleep);
 //[FILE] philo_display.c
 void		display_died(t_philo *philo);
 int			display_info(t_philo *philo, char *info, int type, int sleep);
+
+//[FILE] debug_utils.c
+void	display_fork_pointer(t_philo *philo_tab, int nb_philo);
 #endif

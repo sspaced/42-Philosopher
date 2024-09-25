@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 23:21:42 by root              #+#    #+#             */
-/*   Updated: 2024/07/12 18:13:26 by root             ###   ########.fr       */
+/*   Updated: 2024/09/25 22:45:35 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,15 @@ t_philo	*init_philos_tab(int nb_philo, t_params	params)
 		philos_tab[index].start_time = 0;
 		index++;
 	}
+	init_philos_fork_mutex(philos_tab, nb_philo);
 	init_philos_fork(philos_tab, nb_philo);
 	init_philos_status_mutex(philos_tab, nb_philo);
 	init_philos_status(philos_tab, nb_philo);
 	return (philos_tab);
 }
 
-void	init_philos_fork(t_philo *pt, int nb_philo)
+// Need secure malloc and freeing function
+void	init_philos_fork_mutex(t_philo *pt, int nb_philo)
 {
 	int				index;
 	pthread_mutex_t	*right_fork;
@@ -62,6 +64,30 @@ void	init_philos_fork(t_philo *pt, int nb_philo)
 			pt[index].left_fork_mutex = pt[index - 1].rigth_fork_mutex;
 		if ((index + 1) == nb_philo)
 			pt[0].left_fork_mutex = pt[index].rigth_fork_mutex;
+		index++;
+	}
+}
+
+void	init_philos_fork(t_philo *pt, int nb_philo)
+{
+	int				index;
+	int				*right_fork;
+
+	index = 0;
+	while (index < nb_philo)
+	{
+		right_fork = malloc(sizeof(int));
+		pt[index].right_fork = right_fork;
+		if (index != 0)
+		{
+			pt[index].left_fork = pt[index - 1].right_fork;
+			*pt[index].left_fork = 0;
+		}
+		if ((index + 1) == nb_philo)
+		{
+			pt[0].left_fork = pt[index].right_fork;
+			*pt[0].left_fork = 0;
+		}
 		index++;
 	}
 }
