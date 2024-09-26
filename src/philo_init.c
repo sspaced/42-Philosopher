@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 23:21:42 by root              #+#    #+#             */
-/*   Updated: 2024/09/25 22:45:35 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:00:25 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ void	init_philos_fork_mutex(t_philo *pt, int nb_philo)
 	{
 		right_fork = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(right_fork, NULL);
-		pt[index].rigth_fork_mutex = right_fork;
+		pt[index].right_fork_mutex = right_fork;
 		if (index != 0)
-			pt[index].left_fork_mutex = pt[index - 1].rigth_fork_mutex;
+			pt[index].left_fork_mutex = pt[index - 1].right_fork_mutex;
 		if ((index + 1) == nb_philo)
-			pt[0].left_fork_mutex = pt[index].rigth_fork_mutex;
+			pt[0].left_fork_mutex = pt[index].right_fork_mutex;
 		index++;
 	}
 }

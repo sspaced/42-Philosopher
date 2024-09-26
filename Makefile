@@ -2,7 +2,7 @@ NAME = philosopher
 
 CC = cc
 
-CFLAGS = -fsanitize=thread #-Werror -Wextra -Wall
+CFLAGS = #-fsanitize=address #-Werror -Wextra -Wall
 
 LIB = -pthread
 

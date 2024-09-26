@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:15:20 by root              #+#    #+#             */
-/*   Updated: 2024/09/25 23:06:03 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:35:25 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,6 @@ int	await_ready(t_philo *philo)
 	return (pthread_mutex_unlock(philo->ready_mutex), 0);
 }
 
-time_t	elapsed_meal_time(t_philo *philo, time_t sleep)
-{
-	time_t	time;
-
-	time = current_time_ms();
-	printf("elapsed_meal_time  : %ld\n", (time - philo->last_meal_time) + sleep);
-	return ((time - philo->last_meal_time) + sleep);
-}
-
 time_t	current_time_ms(void)
 {
 	struct timeval	tv;
@@ -52,5 +43,5 @@ void	custom_usleep(int time_sleep)
 
 	start = current_time_ms();
 	while (current_time_ms() - start < time_sleep)
-		usleep(10);
+		usleep(1);
 }

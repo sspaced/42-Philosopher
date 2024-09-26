@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:23:56 by root              #+#    #+#             */
-/*   Updated: 2024/09/25 22:04:52 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:37:29 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_philo
 	int				*ready;
 	int				*right_fork;
 	int				*left_fork;
-	pthread_mutex_t	*rigth_fork_mutex;
+	pthread_mutex_t	*right_fork_mutex;
 	pthread_mutex_t	*left_fork_mutex;
 	pthread_mutex_t	*ready_mutex;
 	pthread_mutex_t	*dead_mutex;
@@ -60,7 +60,6 @@ void		init_philos_fork(t_philo *pt, int nb_philo);
 
 //[FILE] philo_utils.c
 int			await_ready(t_philo *philo);
-time_t		elapsed_meal_time(t_philo *philo, time_t sleep);
 time_t		current_time_ms(void);
 void		custom_usleep(int time_sleep);
 

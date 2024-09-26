@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:16:30 by root              #+#    #+#             */
-/*   Updated: 2024/09/25 17:53:54 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/09/26 20:38:33 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,8 @@ int	display_info(t_philo *philo, char *info, int type, int sleep)
 
 void	display_died(t_philo *philo)
 {
-	time_t	current_time;
 	time_t	elapsed_time;
-
-	current_time = current_time_ms();
-	elapsed_time = current_time - philo->start_time;
+	
+	elapsed_time = current_time_ms() - philo->start_time;
 	printf("%ld %d died\n", elapsed_time, philo->philo_id);
 }
