@@ -1,29 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   get.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/10/02 13:11:38 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:47:03 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./headers/philosopher.h"
+#include "../headers/philosopher.h"
 
-int	main(int argc, char **argv)
+int	get_dead(t_philo *philo)
 {
-	t_table	table;
+	int	dead;
 
-	if (!check_arg(argc, argv))
-		return (0);
-	if (!init_table(&table, argc, argv))
-		return (destroy_mutexes(&table), free_philo(&table), 0);
-	if (!start_threads(&table))
-		return (0);
-	if (!join_threads(&table))
-		return (0);
-	free_philo(&table);
-	return (0);
+	pthread_mutex_lock(&philo->table->dead_mutex);
+	dead = philo->table->dead;
+	pthread_mutex_unlock(&philo->table->dead_mutex);
+	return (dead);
 }

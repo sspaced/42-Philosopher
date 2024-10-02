@@ -1,31 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_utils.c                                      :+:      :+:    :+:   */
+/*   time_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/12 18:15:20 by root              #+#    #+#             */
-/*   Updated: 2024/09/26 20:35:25 by lben-adi         ###   ########.fr       */
+/*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
+/*   Updated: 2024/10/02 13:54:28 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/philosopher.h"
-
-int	await_ready(t_philo *philo)
-{
-	struct timeval	tv;
-
-	pthread_mutex_lock(philo->ready_mutex);
-	gettimeofday(&tv, NULL);
-	if (*(philo->ready) == 1)
-	{
-		philo->start_time = current_time_ms();
-		philo->last_meal_time = philo->start_time;
-		return (pthread_mutex_unlock(philo->ready_mutex), 1);
-	}
-	return (pthread_mutex_unlock(philo->ready_mutex), 0);
-}
 
 time_t	current_time_ms(void)
 {
@@ -37,11 +22,11 @@ time_t	current_time_ms(void)
 	return (time);
 }
 
-void	custom_usleep(int time_sleep)
+void	custom_usleep(time_t time_sleep, t_philo *philo)
 {
 	time_t	start;
 
 	start = current_time_ms();
-	while (current_time_ms() - start < time_sleep)
+	while (current_time_ms() - start < time_sleep && !get_dead(philo))
 		usleep(1);
 }

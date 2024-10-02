@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:23:56 by root              #+#    #+#             */
-/*   Updated: 2024/09/26 20:37:29 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 13:54:23 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
+# include <limits.h>
 
 typedef struct s_params
 {
@@ -24,49 +25,101 @@ typedef struct s_params
 	int			ttd;
 	int			tte;
 	int			tts;
-	int			*philo_eat_list;
+	int			max_meals;
 }				t_params;
 
 typedef struct s_philo
 {
 	pthread_t		thread;
-	t_params		params;
-	int				philo_id;
-	int				eat_nb;
+	int				id;
 	time_t			last_meal_time;
-	time_t			start_time;
-	int				*dead;
-	int				*ready;
-	int				*right_fork;
-	int				*left_fork;
-	pthread_mutex_t	*right_fork_mutex;
-	pthread_mutex_t	*left_fork_mutex;
-	pthread_mutex_t	*ready_mutex;
-	pthread_mutex_t	*dead_mutex;
+	pthread_mutex_t	last_meals_mutex;
+	int				meals_count;
+	pthread_mutex_t	meals_mutex;
+	int				fork_state;
+	pthread_mutex_t	fork_mutex;
+	int				philo_state;
+	pthread_mutex_t	philo_state_mutex;
+	struct s_philo	*next;
+	struct s_table	*table;
 }				t_philo;
+
+typedef struct s_table
+{
+	t_params		params;
+	struct s_philo	*philo;
+	time_t			start_time;
+	int				dead;
+	int				ready;
+	pthread_mutex_t	dead_mutex;
+	pthread_mutex_t	ready_mutex;
+	pthread_mutex_t	write_mutex;
+}				t_table;
+
 //[FOLDER] src
-//[FILE] philo_handler.c
-void		start_philosopher(int nb_philo, t_params params);
-int			check_dead(t_philo *philo, time_t sleep);
-void		*thread_routine(void *arg);
+//[FILE] parsing.c
+int			ft_atoi(const char *str);
+int			check_arg(int arg_nb, char **args);
 
-//[FILE] philo_init.c
-t_philo		*init_philos_tab(int nb_philo, t_params	params);
-t_params	init_params(int ttd, int tte, int tts, int *philo_eat_list);
-void		init_philos_fork_mutex(t_philo *philos_tab, int nb_philo);
-void		init_philos_status_mutex(t_philo *philos_tab, int nb_philo);
-void		init_philos_status(t_philo *philos_tab, int nb_philo);
-void		init_philos_fork(t_philo *pt, int nb_philo);
-
-//[FILE] philo_utils.c
-int			await_ready(t_philo *philo);
-time_t		current_time_ms(void);
-void		custom_usleep(int time_sleep);
-
-//[FILE] philo_display.c
+//[FILE] display.c
 void		display_died(t_philo *philo);
-int			display_info(t_philo *philo, char *info, int type, int sleep);
+void		ft_putchar_fd(char c, int fd);
+void		ft_putstr_fd(char *s, int fd);
+int			display_info(t_philo *philo, char *info);
 
-//[FILE] debug_utils.c
-void	display_fork_pointer(t_philo *philo_tab, int nb_philo);
+//[FILE] init.c
+void		philo_circular(t_table *table);
+int			init_table_philo(t_table *table);
+int			init_table_mutexes(t_table *table);
+t_params	init_params(int arg_nb, char **args);
+int			init_table(t_table *table, int arg_nb, char **args);
+
+//[FILE] philos.c
+t_philo		*philo_last(t_philo *lst);
+t_philo		*philo_create_node(t_table *table, int id);
+void		philo_add_back(t_philo **lst, t_philo *new);
+
+//[FILE] time.c
+time_t		current_time_ms(void);
+void		custom_usleep(time_t time_sleep, t_philo *philo);
+
+//[FILE] free.c
+void		free_philo(t_table	*table);
+void		destroy_mutexes(t_table	*table);
+
+//[FILE] thread.c
+int			join_threads(t_table *table);
+int			start_threads(t_table *table);
+
+//[FILE] set.c
+void		set_meal(t_philo *philo);
+void		set_last_meal_time(t_philo *philo);
+void		set_fork_state(t_philo *philo, int state);
+void		set_dead(t_philo *philo);
+void		set_philo_state(t_philo *philo, int state);
+
+//[FILE] get.c
+int			get_dead(t_philo *philo);
+int			get_fork_state(t_philo *philo);
+
+//[FILE] await.c
+void		await_ready(t_philo *philo);
+int			await_fork(t_philo *philo);
+
+//[FILE] monitor.c
+int			check_end(t_philo *philo);
+int			check_dead(t_philo *philo);
+void		end_monitor(t_table *table);
+
+//[FILE] routine.c
+void		*thread_routine(void *arg);
+int			philo_routine(t_philo *philo);
+
+//[FILE] action.c
+int			philo_eat(t_philo *philo);
+int			philo_sleep(t_philo *philo);
+int			try_lock_forks(t_philo *philo);
+
+//[FILE] debug.c
+void		display_philo_info(t_table *table); //not used yet
 #endif

@@ -2,18 +2,27 @@ NAME = philosopher
 
 CC = cc
 
-CFLAGS = #-fsanitize=address #-Werror -Wextra -Wall
+CFLAGS = -g #-fsanitize=thread -g -Werror -Wextra -Wall
 
 LIB = -pthread
 
 INC = headers/philosopher.h
 
 SRCS = 	main.c\
-		src/philo_handler.c\
-		src/philo_init.c\
-		src/philo_utils.c\
-		src/philo_display.c\
-		src/debug_utils.c\
+		src/parsing.c\
+		src/display.c\
+		src/init.c\
+		src/philos_list.c\
+		src/time_utils.c\
+		src/free.c\
+		src/thread.c\
+		src/set.c\
+		src/get.c\
+		src/await.c\
+		src/monitor.c\
+		src/routine.c\
+		src/action.c\
+		src/debug.c\
 
 OBJS =	$(SRCS:.c=.o)
 
