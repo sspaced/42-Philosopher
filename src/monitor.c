@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/10/02 14:06:12 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:19:45 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 int	check_dead(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->last_meals_mutex);
-	if ((current_time_ms() - philo->last_meal_time) > philo->table->params.ttd
-		&& philo->philo_state != 1)
+	if ((current_time_ms() - philo->last_meal_time) > philo->table->params.ttd)
 	{
 		set_dead(philo);
 		pthread_mutex_unlock(&philo->last_meals_mutex);
@@ -48,12 +47,12 @@ void	end_monitor(t_table *table)
 		philo_next = table->philo->next;
 		if (!check_dead(table->philo))
 		{
-			if (nb_max_meal !=  table->params.nb_philo)
+			if (nb_max_meal != table->params.nb_philo)
 				display_died(table->philo);
 			break ;
 		}
 		nb_max_meal = check_meals(table->philo, nb_max_meal);
-		if (nb_max_meal ==  table->params.nb_philo)
+		if (nb_max_meal == table->params.nb_philo)
 		{
 			set_dead(table->philo);
 			break ;

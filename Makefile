@@ -2,7 +2,7 @@ NAME = philosopher
 
 CC = cc
 
-CFLAGS = -g #-fsanitize=thread -g -Werror -Wextra -Wall
+CFLAGS = -g -Werror -Wextra -Wall #-fsanitize=thread
 
 LIB = -pthread
 
@@ -22,7 +22,6 @@ SRCS = 	main.c\
 		src/monitor.c\
 		src/routine.c\
 		src/action.c\
-		src/debug.c\
 
 OBJS =	$(SRCS:.c=.o)
 

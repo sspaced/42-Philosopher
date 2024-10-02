@@ -1,16 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/10/01 22:04:29 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:42:38 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/philosopher.h"
+
+int	ft_isdigit(int c)
+{
+	if (c <= '9' && c >= '0')
+	{
+		return (2048);
+	}
+	return (0);
+}
+
+int	check_if_digit(int arg_nb, char **args)
+{
+	int	i;
+	int	u;
+
+	i = 1;
+	u = 1;
+	while (i < arg_nb)
+	{
+		while (args[i][u])
+		{
+			if (!ft_isdigit(args[i][u]))
+				return (0);
+			u++;
+		}
+		u = 0;
+		i++;
+	}
+	return (1);
+}
 
 int	check_arg(int arg_nb, char **args)
 {
@@ -19,6 +49,8 @@ int	check_arg(int arg_nb, char **args)
 	i = 1;
 	if (arg_nb <= 4 || arg_nb > 6)
 		return (ft_putstr_fd("Invalid argument : arg number !\n", 2), 0);
+	if (!check_if_digit(arg_nb, args))
+		return (ft_putstr_fd("Invalid argument : not number !\n", 2), 0);
 	while (i < arg_nb)
 	{
 		if (i != 1 && i != 5 && ft_atoi(args[i]) < 60)

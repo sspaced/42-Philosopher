@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/10/02 13:11:38 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:31:41 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ int	main(int argc, char **argv)
 	if (!init_table(&table, argc, argv))
 		return (destroy_mutexes(&table), free_philo(&table), 0);
 	if (!start_threads(&table))
-		return (0);
+		return (destroy_mutexes(&table), free_philo(&table), 0);
 	if (!join_threads(&table))
-		return (0);
+		return (destroy_mutexes(&table), free_philo(&table), 0);
+	destroy_mutexes(&table);
 	free_philo(&table);
 	return (0);
 }

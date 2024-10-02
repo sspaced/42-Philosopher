@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 18:07:35 by root              #+#    #+#             */
-/*   Updated: 2024/10/02 11:32:11 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:33:55 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ int	start_threads(t_table *table)
 	while (i < table->params.nb_philo)
 	{
 		philo_next = table->philo->next;
-		pthread_create(&table->philo->thread,
-			NULL, &thread_routine, table->philo);
+		if (pthread_create(&table->philo->thread,
+				NULL, &thread_routine, table->philo))
+			return (pthread_mutex_unlock(&table->ready_mutex), 0);
 		table->philo = philo_next;
 		i++;
 	}

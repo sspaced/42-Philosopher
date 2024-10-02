@@ -6,7 +6,7 @@
 /*   By: lben-adi <lben-adi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:23:56 by root              #+#    #+#             */
-/*   Updated: 2024/10/02 13:54:23 by lben-adi         ###   ########.fr       */
+/*   Updated: 2024/10/02 16:38:27 by lben-adi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ typedef struct s_philo
 	pthread_mutex_t	meals_mutex;
 	int				fork_state;
 	pthread_mutex_t	fork_mutex;
-	int				philo_state;
-	pthread_mutex_t	philo_state_mutex;
 	struct s_philo	*next;
 	struct s_table	*table;
 }				t_philo;
@@ -58,8 +56,10 @@ typedef struct s_table
 
 //[FOLDER] src
 //[FILE] parsing.c
+int			ft_isdigit(int c);
 int			ft_atoi(const char *str);
 int			check_arg(int arg_nb, char **args);
+int			check_if_digit(int arg_nb, char **args);
 
 //[FILE] display.c
 void		display_died(t_philo *philo);
@@ -68,18 +68,18 @@ void		ft_putstr_fd(char *s, int fd);
 int			display_info(t_philo *philo, char *info);
 
 //[FILE] init.c
-void		philo_circular(t_table *table);
 int			init_table_philo(t_table *table);
 int			init_table_mutexes(t_table *table);
 t_params	init_params(int arg_nb, char **args);
 int			init_table(t_table *table, int arg_nb, char **args);
 
-//[FILE] philos.c
+//[FILE] philos_list.c
 t_philo		*philo_last(t_philo *lst);
+void		philo_circular(t_table *table);
 t_philo		*philo_create_node(t_table *table, int id);
 void		philo_add_back(t_philo **lst, t_philo *new);
 
-//[FILE] time.c
+//[FILE] time_utils.c
 time_t		current_time_ms(void);
 void		custom_usleep(time_t time_sleep, t_philo *philo);
 
@@ -96,15 +96,12 @@ void		set_meal(t_philo *philo);
 void		set_last_meal_time(t_philo *philo);
 void		set_fork_state(t_philo *philo, int state);
 void		set_dead(t_philo *philo);
-void		set_philo_state(t_philo *philo, int state);
 
 //[FILE] get.c
 int			get_dead(t_philo *philo);
-int			get_fork_state(t_philo *philo);
 
 //[FILE] await.c
 void		await_ready(t_philo *philo);
-int			await_fork(t_philo *philo);
 
 //[FILE] monitor.c
 int			check_end(t_philo *philo);
@@ -118,8 +115,6 @@ int			philo_routine(t_philo *philo);
 //[FILE] action.c
 int			philo_eat(t_philo *philo);
 int			philo_sleep(t_philo *philo);
-int			try_lock_forks(t_philo *philo);
+int			lock_forks(t_philo *philo, int fork_aquire);
 
-//[FILE] debug.c
-void		display_philo_info(t_table *table); //not used yet
 #endif
